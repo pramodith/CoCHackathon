@@ -31,17 +31,17 @@ def allowed_file(filename):
 @app.route('/upload', methods=['POST'])
 def upload_file():
     # check if the post request has the file part
-    # print('request', request.files)
+    print('request', request.files)
     if 'bill' not in request.files:
-        return 'Failed, bill is not in request.files'
+        return jsonify({"status": "Failed",
+                        "reason": "bill is not in request.files" }), 400
     file = request.files['bill']
     # if user does not select file, browser also
     # submit a empty part without filename
     if file.filename == '':
-        flash('No selected file')
-        return redirect(request.url)
+        return jsonify({"status": "Failed",
+                        "reason": "No selected file"}), 400
     if file and allowed_file(file.filename):
-
         # call OCR method here
 
         # filename = secure_filename(file.filename)
@@ -49,3 +49,6 @@ def upload_file():
         # return redirect(url_for('uploaded_file',
         #                         filename=filename))
         return jsonify([{"milk": "5d"}, {"bread": "2d"}, {"eggs": "7d"}])
+    else:
+        return jsonify({"status": "Failed",
+                        "reason": "File name not valid"}), 400
