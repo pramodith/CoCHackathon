@@ -71,6 +71,30 @@ def firebase_auth():
         REGISTERED_DEVICE_ID=req_object["regiatration_id"]
         return jsonify({"api_key"})
 
+@app.route('/test',methods=['GET'])
+def send_notification():
+    from pyfcm import FCMNotification
+
+    push_service = FCMNotification(api_key="AAAAkn0q-qU:APA91bG4dp-bdQfYD3zSJwZnFYiWXnYMLI6BtNDl-yJSQW2hnSW1dwH_Yw1qTayryoDXPVZeOsUw9ZoQKXRDiHINnIw4u4oSchiaE3wPWFIVqcAkMpkfPH5eneZZRjKdnltTcn1PUafu")
+
+    # OR initialize with proxies
+    '''
+    proxy_dict = {
+        "http": "http://127.0.0.1",
+        "https": "http://127.0.0.1",
+    }
+    push_service = FCMNotification(api_key="<api-key>", proxy_dict=proxy_dict)
+    '''
+    # Your api-key can be gotten from:  https://console.firebase.google.com/project/<project-name>/settings/cloudmessaging
+
+    registration_id = "<device registration_id>"
+    message_title = "Uber update"
+    message_body = "Hi john, your customized news for today is ready"
+    result = push_service.notify_single_device(registration_id="asbdaf", message_title=message_title,
+                                               message_body=message_body,)
+
+    print(result)
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
     # check if the post request has the file part
@@ -134,28 +158,11 @@ def run_scheduled_task():
     timer = Timer(10, send_notification)
     timer.start()
 
-def send_notification():
-    from pyfcm import FCMNotification
-
-    push_service = FCMNotification(api_key="AIzaSyBUQheVYZa02EFcLRg-Sli3GYHBz2M0NAc")
-
-    # OR initialize with proxies
-    '''
-    proxy_dict = {
-        "http": "http://127.0.0.1",
-        "https": "http://127.0.0.1",
-    }
-    push_service = FCMNotification(api_key="<api-key>", proxy_dict=proxy_dict)
-    '''
-    # Your api-key can be gotten from:  https://console.firebase.google.com/project/<project-name>/settings/cloudmessaging
-
-    registration_id = "<device registration_id>"
-    message_title = "Uber update"
-    message_body = "Hi john, your customized news for today is ready"
-    result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title,
-                                               message_body=message_body,)
-
-    print(result)
+'''
+def final_json():
+    final_dict={}
+    final_dict['food']=
+'''
 
 if __name__ == '__main__':
-   app.run()
+   app.run(host='0.0.0.0')
