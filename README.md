@@ -12,3 +12,11 @@ i)Adding a claim food feature: You often have leftovers after parties, why waste
 and claim the food.
 ii)Once you are in a grocery store we will remind you of the items that you ended up throwing out, so that you'll be wary of what and how 
 much food you buy.
+
+Technology Used:
+i) Google Cloud Vision API to extract text from bills.
+ii) Edamam API to extract the food items from the bill and provide recipes based on ingredients that the user has.
+iii) Google Places/Maps API to find the closest charitable organizations to the user.'
+
+Server: Python Flask
+Client: Android Application
