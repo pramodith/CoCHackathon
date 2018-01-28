@@ -16,6 +16,7 @@ home.
 * [Edamam API](https://developer.edamam.com/) to extract the food items from the bill and provide recipes based on ingredients that the user has
 * [Google Places/Maps API](https://developers.google.com/places/) to find the closest charitable organizations to the user
 * [Google Firebase](https://firebase.google.com/) to send downstream notifications to clients
+* [JSON Web Token](http://jwt.io) based authentication and authorization
 
 Server: Python Flask
 Client: Android Application
@@ -36,5 +37,5 @@ much food you buy.
     ```
 * Run the server
     ```sh
-    FLASK_APP=backend.app.py flask run --host=0.0.0.0
+    FLASK_APP=backend.app.py flask run --host=0.0.0.0 
     ```
