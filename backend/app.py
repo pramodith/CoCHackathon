@@ -4,6 +4,7 @@ from backend.food_bank_api import Food_Bank
 from backend.expiry import Expiry_date
 from backend.Google_cloud import Google
 import re
+import random
 from threading import Timer
 from backend.Google_places import places
 
@@ -12,7 +13,7 @@ SECRET = 'mysecret'
 UPLOAD_FOLDER = './data/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 REGISTERED_DEVICE_ID = None
-
+FOOD_PR=None
 '''
 def _get_access_token():
     """
@@ -62,33 +63,6 @@ def firebase_auth():
         REGISTERED_DEVICE_ID = req_object["regiatration_id"]
         return jsonify({"api_key"})
 
-
-@app.route('/test', methods=['GET'])
-def send_notification():
-    from pyfcm import FCMNotification
-
-    push_service = FCMNotification(
-        api_key="AAAAkn0q-qU:APA91bG4dp-bdQfYD3zSJwZnFYiWXnYMLI6BtNDl-yJSQW2hnSW1dwH_Yw1qTayryoDXPVZeOsUw9ZoQKXRDiHINnIw4u4oSchiaE3wPWFIVqcAkMpkfPH5eneZZRjKdnltTcn1PUafu")
-
-    # OR initialize with proxies
-    '''
-    proxy_dict = {
-        "http": "http://127.0.0.1",
-        "https": "http://127.0.0.1",
-    }
-    push_service = FCMNotification(api_key="<api-key>", proxy_dict=proxy_dict)
-    '''
-    # Your api-key can be gotten from:  https://console.firebase.google.com/project/<project-name>/settings/cloudmessaging
-
-    registration_id = "<device registration_id>"
-    message_title = "Uber update"
-    message_body = "Hi john, your customized news for today is ready"
-    result = push_service.notify_single_device(registration_id="asbdaf", message_title=message_title,
-                                               message_body=message_body, )
-
-    print(result)
-
-
 @app.route('/upload', methods=['POST'])
 def upload_file():
     # check if the post request has the file part
@@ -116,13 +90,24 @@ def upload_file():
         return jsonify({"status": "Failed",
                         "reason": "File name not valid"}), 400
 
+@app.route('/donate',methods=['GET'])
+def get_organiztion():
+    p = places()
+    loc_dict = {}
+    organization, place_id, location = p.get_nearby_charities()
+    for i in range(len(organization)):
+        loc_dict[organization[i]] = {#'place_id': place_id[i],
+                                     'location': {'lat': location[i][0], 'long': location[i][1]}}
+    return jsonify(loc_dict)
+
 
 def caller(image):
     ocr_obj = Google()
     ocr_text = ocr_obj.get_text()
     fd = Food_Bank()
     exp = Expiry_date()
-    food_dict = {}
+    food_dict = []
+    index=0
     cost_dict = {}
     food_item = None
     for line in ocr_text:
@@ -141,25 +126,26 @@ def caller(image):
                         food = food.strip(',')
                         expiry_days = exp.get_expiry_date(food)
                         if expiry_days:
-                            food_dict[food] = expiry_days
+                            food_dict.append({})
+                            food_dict[index]['product']=food
+                            food_dict[index]['days'] = expiry_days
+                            #food_dict[index]['cost']=cost_dict[food_item]
+                            index+=1
                             food_item = food
                             break
                 else:
                     expiry_days = exp.get_expiry_date(food_item)
                     if expiry_days:
-                        food_dict[food_item] = expiry_days
-    run_scheduled_task(food_dict.keys()[:3])
+                        food_dict[index]['product']=food_item
+                        food_dict[index]['days']=expiry_days
+                        #food_dict[index]['cost']=cost_dict[food_item]
+                        index+=1
+    ingred=[]
+    for i in range(0,min(3,len(food_dict))):
+        ingred.append(food_dict[i]['product'])
+    run_scheduled_task(ingred)
+    FOOD_PR=food_dict
     return json.dumps(food_dict), json.dumps(cost_dict)
-
-
-def get_organiztion():
-    p = places()
-    loc_dict = {}
-    organization, place_id, location = p.get_nearby_charities()
-    for i in range(len(organization)):
-        loc_dict[organization[i]] = {'place_id': place_id[i],
-                                     'location': {'lat': location[i]['lat'], 'long': location[i]['long']}}
-    return jsonify(loc_dict)
 
 
 def send_recipe(ingredients):
@@ -171,9 +157,35 @@ def run_scheduled_task(ingredients):
     ingr=''
     for item in ingredients:
         ingr+=item+","
-    timer = Timer(10, send_recipe,ingr)
+    timer = Timer(10,send_notification,[ingr])
     timer.start()
 
+def send_notification(ingredients):
+    from pyfcm import FCMNotification
+    recipes=send_recipe(ingredients)
+    push_service = FCMNotification(
+        api_key="AAAAkn0q-qU:APA91bG4dp-bdQfYD3zSJwZnFYiWXnYMLI6BtNDl-yJSQW2hnSW1dwH_Yw1qTayryoDXPVZeOsUw9ZoQKXRDiHINnIw4u4oSchiaE3wPWFIVqcAkMpkfPH5eneZZRjKdnltTcn1PUafu")
+
+    # Your api-key can be gotten from:  https://console.firebase.google.com/project/<project-name>/settings/cloudmessaging
+    notify_about={}
+    notify_about['expires']={}
+    index=0
+    for food in FOOD_PR:
+        if food['days']<=3:
+            notify_about['expires'].append(food['product'])
+    notify_about['recipes']=recipes
+    message_title = "Food Expiration Alert"
+    message_body = notify_about
+    result = push_service.notify_single_device(registration_id=REGISTERED_DEVICE_ID, message_title=message_title,
+                                               message_body=json.dumps(message_body), )
+
+    print(result)
+
+def get_fact():
+    with open("../food_db/Food_wastage_facts.txt",'r') as f:
+        lines=f.read()
+        lines=lines.split("\n")
+    return(lines[random.randint(0,len(lines)-1)])
 
 '''
 def final_json():
