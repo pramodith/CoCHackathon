@@ -1,0 +1,242 @@
+{
+    "html_attributions": [],
+    "results": [
+        {
+            "geometry": {
+                "location": {
+                    "lat": 33.7775255,
+                    "lng": -84.3895077
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 33.7785393302915,
+                        "lng": -84.3881681197085
+                    },
+                    "southwest": {
+                        "lat": 33.7758413697085,
+                        "lng": -84.3908660802915
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/generic_business-71.png",
+            "id": "3107c02aab5757af95e3af46510f92d5f8c43f5a",
+            "name": "Entrepreneurs Foundation",
+            "place_id": "ChIJ-SOD6GYE9YgRnvjc8KWxyxE",
+            "reference": "CmRRAAAAEM7RqK2_mpXIBUh4tAf8GOH8Mv0ODQfs7NC_JQOXxcQqlzTKnntSdWywumkdn7uunTUrE6JHgESpKBW2qYrbJnCMONpyhyCuMjD9qPtfVMozOYOebIQhfM1Xe4zzEJYAEhApCTgXCmWXW-g1hCoCPgCDGhRIdKyTZjvPO_VR1LXGf6ZFg1CsLw",
+            "scope": "GOOGLE",
+            "types": [
+                "point_of_interest",
+                "establishment"
+            ],
+            "vicinity": "75 5th Street Northwest, Atlanta"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 33.7725744,
+                    "lng": -84.4026098
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 33.77392338029149,
+                        "lng": -84.4012608197085
+                    },
+                    "southwest": {
+                        "lat": 33.7712254197085,
+                        "lng": -84.4039587802915
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png",
+            "id": "9cc994a2722590727197179cf3990053c419a6b0",
+            "name": "The Salvation Army Family Store",
+            "opening_hours": {
+                "open_now": true,
+                "weekday_text": []
+            },
+            "photos": [
+                {
+                    "height": 280,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/103881361956679355038/photos\">The Salvation Army Family Store</a>"
+                    ],
+                    "photo_reference": "CmRaAAAApAfUAmKBJYWPgVXMZfAsP3m8oyT1_UIo86vcHBCfxp5QBwwJr4TM8X_eLa8MMu2Iwhsy9lSG7YrZmRtiyC3eSD5ngb9nM6NN5dvX4L-2tSBgxtG72wyHHyUtmpchnewqEhCb69UQzN7HnRwMSFLgRs0vGhQ1jKY9eDaH5SRMAb4AO1n04aIy4g",
+                    "width": 600
+                }
+            ],
+            "place_id": "ChIJUQqlI48E9YgRx3_0okdtsJA",
+            "reference": "CmRSAAAAdDvoBXj8TfiZne3HgF62WsVYoPojLdpUvZxjD-gGsKqS_HRaszG4PUa1kVd-eumAu3EV67HIBuj2TwFY5MPd8vvF1nxfVBnjiHAl5cB9bOFYqTzb7fC739ZVBIxAt3l1EhCSLvmzrSqURsc5Rd2a1PP7GhRsXycwihJb-26G9mhNCUKZYyfWdQ",
+            "scope": "GOOGLE",
+            "types": [
+                "store",
+                "point_of_interest",
+                "establishment"
+            ],
+            "vicinity": "740 Marietta Street NorthWest, Atlanta"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 33.7725695,
+                    "lng": -84.4030203
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 33.7741244802915,
+                        "lng": -84.4015557197085
+                    },
+                    "southwest": {
+                        "lat": 33.7714265197085,
+                        "lng": -84.4042536802915
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png",
+            "id": "05ce153df57702b54bed0f7bc4e9ef8e5c3169a7",
+            "name": "The Salvation Army Thrift Store",
+            "opening_hours": {
+                "open_now": true,
+                "weekday_text": []
+            },
+            "photos": [
+                {
+                    "height": 1536,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/108318636526451558763/photos\">Maegann Stafford</a>"
+                    ],
+                    "photo_reference": "CmRaAAAAUn3XJcXv776w6_neFnAz0lYOULzwGBf0-x_ZkGp-9maGS7Wy6U7rav94JBLky41xJXsHoFe_y0ZZYRYRXSrJqb1Q8ynZRFklWHe2zGzZgw1KrfSUdwvIHsGseZ27C7HMEhBp_hpQCiz28VBPmgOerHEMGhRQLuQicIC1o9SU2QXAyNj1n8EYLQ",
+                    "width": 2048
+                }
+            ],
+            "place_id": "ChIJsd8G4o4E9YgRoVbHzckjncM",
+            "price_level": 1,
+            "rating": 4.2,
+            "reference": "CmRSAAAA6xLF5iZzjTfVZ3-uDf0UKVfSvgeMwQZ9Vxn-WhBuG4aZkWFPrlyBEAPYiQmMbsRpBycnEEo2x4Z7ExYvyb7i2cJnJDhdtIFYjEe5F76BAbKqBjpWLxyjiO1OptUcZTirEhAd2JTINUhqQaFNMdSetm6TGhQqWlw7idljEScHFxQDDUbticCagQ",
+            "scope": "GOOGLE",
+            "types": [
+                "store",
+                "point_of_interest",
+                "establishment"
+            ],
+            "vicinity": "746 Marietta Street NorthWest, Atlanta"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 33.7725744,
+                    "lng": -84.4026098
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 33.77392338029149,
+                        "lng": -84.4012608197085
+                    },
+                    "southwest": {
+                        "lat": 33.7712254197085,
+                        "lng": -84.4039587802915
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/generic_business-71.png",
+            "id": "452be033be3e96de7e4d6b845ddd034cf4bae7b5",
+            "name": "The Salvation Army Adult Rehabilitation Center",
+            "opening_hours": {
+                "open_now": true,
+                "weekday_text": []
+            },
+            "photos": [
+                {
+                    "height": 280,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/107106799524027710975/photos\">The Salvation Army Adult Rehabilitation Center</a>"
+                    ],
+                    "photo_reference": "CmRaAAAAfVS8CzDGYcBjkf-36ZdcdJj3jULgHo-XEIuM5rPEwT8nF6XS2aNIiCZDbdIgIRyEytbL_-5qkrBO9nwXBJm03neiEwKFQvVF1Jb9Y1Z9IQoKXseDzf5I5UDDl9h0GKhOEhAxn4YzqhvRVfczMqqQr9khGhSNTQcZ4GMj2DX3PZepJRdT3s-zjg",
+                    "width": 600
+                }
+            ],
+            "place_id": "ChIJUQqlI48E9YgR8XTMuV7JSRU",
+            "reference": "CmRRAAAAyQQiBz3oCWEHKeFxi3YEwYKRYseKm7hvK6DwT9bfjAOQd3WUgvh4Y_eBPSdl7GDbDLq7pb9h4BEuYskUaDC5s3IlfCy3ZqhV1mLpAiCayXsMljKmf6wynjW6-PJzgR7bEhCiOcqwFZ9eaVubFbGtoYm1GhTUJ1otvWTiBmaBkbGDyOvaW3epiA",
+            "scope": "GOOGLE",
+            "types": [
+                "health",
+                "point_of_interest",
+                "establishment"
+            ],
+            "vicinity": "740 Marietta Street NorthWest, Atlanta"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 33.77561779999999,
+                    "lng": -84.39628499999999
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 33.78657870000001,
+                        "lng": -84.3789826
+                    },
+                    "southwest": {
+                        "lat": 33.7663319,
+                        "lng": -84.41260580000002
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/school-71.png",
+            "id": "1b84da9492645ad3413c4429ec4f70f7b7cbcb39",
+            "name": "Georgia Institute of Technology",
+            "photos": [
+                {
+                    "height": 2848,
+                    "html_attributions": [
+                        "<a href=\"https://maps.google.com/maps/contrib/106921818136072394520/photos\">Arun Kallumkal</a>"
+                    ],
+                    "photo_reference": "CmRaAAAAA2paURt2vwRGdFOThw3gZq6NLoRHHeZP_feA9RWYPK75W7ezPfeLATaOViBFDZCaZZM2QEXS_1biKSSnxQGiJz0FQ5EAifRETQnaCd2C3JLnKLGSqc3EMWy_zUA_AyvdEhDyo2c8qhLDgb8xRUjxx7vlGhTg9koo3mLJNQ9sR1eiCvWEeUpXQw",
+                    "width": 4272
+                }
+            ],
+            "place_id": "ChIJ40_D64oE9YgRD8XYOj7QKrU",
+            "rating": 4.5,
+            "reference": "CmRSAAAAZJsE4LxSKGvYONk23ZYJzppUmZOiJD94CHLue67gAnaEXl70RBgPiwr_SEtIC3yYvj4R4EGQpzuL3Luqz2pHJVP8ETWB_fwZuK0eHbTNzB35xVf5FjXw59D2yr9A5HiBEhCHZs9pj7RSK6mfP3CC1_5vGhSGGP5Uy21RLOyWF0uBBSkPqaDdTQ",
+            "scope": "GOOGLE",
+            "types": [
+                "university",
+                "point_of_interest",
+                "establishment"
+            ],
+            "vicinity": "North Ave NW, Atlanta"
+        },
+        {
+            "geometry": {
+                "location": {
+                    "lat": 33.7725744,
+                    "lng": -84.4026098
+                },
+                "viewport": {
+                    "northeast": {
+                        "lat": 33.7740482802915,
+                        "lng": -84.4011672697085
+                    },
+                    "southwest": {
+                        "lat": 33.7713503197085,
+                        "lng": -84.4038652302915
+                    }
+                }
+            },
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/generic_business-71.png",
+            "id": "04d6caeb382ba05e9a2bedd77cfbff34b5aede4f",
+            "name": "Salvation Army Rehab Center",
+            "place_id": "ChIJUQqlI48E9YgRRXWWEyMs7q8",
+            "price_level": 1,
+            "rating": 4.2,
+            "reference": "CmRSAAAAqsPLliRDMxKBlie6nX7nBO-pOqdjXJvFWc3zm8MX5luE1DAZrbF_7qZghUVDi86k1adUXfZX6JM0eRsq-8qAm4IZYgWpsh0Rl9xcDlPic1RvoK66R1PEogwa0scDwqetEhDi2EZ6rzcc01ElYgsuh8e1GhSvjwbH5bcxPED-CE92CJFTYiIwMA",
+            "scope": "GOOGLE",
+            "types": [
+                "health",
+                "point_of_interest",
+                "establishment"
+            ],
+            "vicinity": "740 Marietta Street NorthWest, Atlanta"
+        }
+    ],
+    "status": "OK"
+}

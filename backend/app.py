@@ -16,11 +16,15 @@ def ping():
 
 @app.route("/login", methods=['POST'])
 def login():
-    req_object = request.get_json()
-    encoded = jwt.encode(req_object, SECRET, algorithm='HS256')
-    response = {}
-    response['token'] = encoded
-    return encoded
+    if request.is_json:
+        req_object = request.get_json()
+        print("request: ", req_object)
+        encoded = jwt.encode(req_object, SECRET, algorithm='HS256')
+        print("encoded: ", encoded)
+        return jsonify({"token": str(encoded,'utf-8')}), 200
+    else:
+        return jsonify({"status": "Failed",
+                        "reason": "Not a json"}), 400
 
 
 def allowed_file(filename):
