@@ -15,13 +15,14 @@ class places:
         self.url_nearby="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="
         self.url_textsearch="https://maps.googleapis.com/maps/api/place/textsearch/json?query="
         self.url_directions="https://https://maps.googleapis.com/maps/api/directions/json?origin"
-        self.possible_type=['church','hindu_temple','synagogue','mosque']
+        self.possible_type=['charity']
+        #self.possible_type=['church','hindu_temple','synagogue','mosque']
         self.place_ids=[]
         self.location=[]
     def get_nearby_worship(self):
         organizations=[]
         for type in self.possible_type:
-            response=requests.get(self.url_nearby+str(self.lat)+","+str(self.long)+"&radius="+str(self.radius)+"&type="+type+"&key="+self.api_key)
+            response=requests.get(self.url_nearby+str(self.lat)+","+str(self.long)+"&radius="+str(self.radius)+"&keyword="+type+"&key="+self.api_key)
             places=response.json()
             for result in places['results']:
                 self.location.append((result['geometry']['location']['lat'],result['geometry']['location']['lng']))
@@ -45,4 +46,4 @@ class places:
             destination_place_id) + "&waypoints=" )
 obj=places()
 obj.get_nearby_worship()
-obj.get_nearby_charities()
+#obj.get_nearby_charities()
