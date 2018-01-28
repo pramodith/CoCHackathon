@@ -43,7 +43,8 @@ def login():
     if request.is_json:
         req_object = request.get_json()
         if "device_id" in req_object:
-            REGISTERED_DEVICE_ID = req_object['device_id']
+            global REGISTERED_DEVICE_ID
+            REGISTERED_DEVICE_ID = req_object['phoneId']
         print("request: ", req_object)
         encoded = jwt.encode(req_object, SECRET, algorithm='HS256')
         print("encoded: ", encoded)
@@ -61,7 +62,8 @@ def allowed_file(filename):
 def firebase_auth():
     if request.is_json:
         req_object = request.get_json()
-        REGISTERED_DEVICE_ID = req_object["regiatration_id"]
+        global REGISTERED_DEVICE_ID
+        REGISTERED_DEVICE_ID = req_object["registration_id"]
         return jsonify({"api_key"})
 
 
@@ -86,8 +88,23 @@ def upload_file():
         # return redirect(url_for('uploaded_file',
         #                         filename=filename))
 
-        a, b = caller(file)
-        return a
+        # a, b = caller(file)
+        return jsonify([{
+            "days": 1,
+            "product": "fresh"
+        },
+            {
+                "days": 3,
+                "product": "Onions"
+            },
+            {
+                "days": 3,
+                "product": "pound"
+            },
+            {
+                "days": 14,
+                "product": "Radishes"
+            }])
     else:
         return jsonify({"status": "Failed",
                         "reason": "File name not valid"}), 400
@@ -95,7 +112,7 @@ def upload_file():
 
 @app.route('/donate', methods=['GET'])
 def get_organiztion():
-    p = places()
+    p = Places()
     loc_dict = {}
     organization, place_id, location = p.get_nearby_charities()
     for i in range(len(organization)):
@@ -174,7 +191,7 @@ def run_scheduled_task(ingredients, FOOD_PR):
     print("Ingr: ", ingredients)
     for item in ingredients:
         ingr += item + ","
-    timer = Timer(2, send_notification, [ingr], {'f':FOOD_PR})
+    timer = Timer(2, send_notification, [ingr], {'f': FOOD_PR})
     timer.start()
 
 
