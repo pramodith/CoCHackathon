@@ -136,13 +136,18 @@ def caller(image):
                 cost_dict[food_item]="$1.50"
         else:
             food_item = fd.get_food(line)
-            food_item=food_item.split(" ")
-            for food in food_item:
-                food=food.strip(',')
-                expiry_days = exp.get_expiry_date(food)
+            if " " in food_item:
+                food_item=food_item.split(" ")
+                for food in food_item:
+                    food=food.strip(',')
+                    expiry_days = exp.get_expiry_date(food)
+                    if expiry_days:
+                        food_dict[food_item]=expiry_days
+                        break
+            else:
+                expiry_days = exp.get_expiry_date(food_item)
                 if expiry_days:
-                    food_dict[food_item]=expiry_days
-                    break
+                    food_dict[food_item] = expiry_days
 
     return json.dumps(food_dict),json.dumps(cost_dict)
 
