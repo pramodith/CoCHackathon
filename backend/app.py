@@ -12,6 +12,7 @@ from pyfcm import FCMNotification
 app = Flask(__name__)
 SECRET = 'mysecret'
 UPLOAD_FOLDER = './data/'
+userLocation = ()
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 REGISTERED_DEVICE_ID = None
 FOOD_PR = None
@@ -44,10 +45,14 @@ def login():
         req_object = request.get_json()
         if "device_id" in req_object:
             global REGISTERED_DEVICE_ID
-            REGISTERED_DEVICE_ID = req_object['phoneId']
-        print("request: ", req_object)
+            REGISTERED_DEVICE_ID = req_object['token']
+        if "loc" in req_object:
+            global userLocation
+            userLocation = req_object['loc'].split(",")
+        #     print("userLocation: ", tuple(userLocation))
+        # print("request: ", req_object)
         encoded = jwt.encode(req_object, SECRET, algorithm='HS256')
-        print("encoded: ", encoded)
+        # print("encoded: ", encoded)
         return jsonify({"token": str(encoded, 'utf-8')}), 200
     else:
         return jsonify({"status": "Failed",
@@ -70,7 +75,7 @@ def firebase_auth():
 @app.route('/upload', methods=['POST'])
 def upload_file():
     # check if the post request has the file part
-    print('request', request.files)
+    # print('request', request.files)
     if 'bill' not in request.files:
         return jsonify({"status": "Failed",
                         "reason": "bill is not in request.files"}), 400
@@ -88,36 +93,40 @@ def upload_file():
         # return redirect(url_for('uploaded_file',
         #                         filename=filename))
 
-        # a, b = caller(file)
-        return jsonify([{
-            "days": 1,
-            "product": "fresh"
-        },
-            {
-                "days": 3,
-                "product": "Onions"
-            },
-            {
-                "days": 3,
-                "product": "pound"
-            },
-            {
-                "days": 14,
-                "product": "Radishes"
-            }])
+        a, b = caller(file)
+        return jsonify(a)
+        # return jsonify([{
+        #     "days": 1,
+        #     "product": "fresh"
+        # },
+        #     {
+        #         "days": 3,
+        #         "product": "Onions"
+        #     },
+        #     {
+        #         "days": 3,
+        #         "product": "pound"
+        #     },
+        #     {
+        #         "days": 14,
+        #         "product": "Radishes"
+        #     }])
     else:
         return jsonify({"status": "Failed",
                         "reason": "File name not valid"}), 400
 
 
 @app.route('/donate', methods=['GET'])
-def get_organiztion():
+def donate():
     p = Places()
-    loc_dict = {}
-    organization, place_id, location = p.get_nearby_charities()
-    for i in range(len(organization)):
-        loc_dict[organization[i]] = {  # 'place_id': place_id[i],
-            'location': {'lat': location[i][0], 'long': location[i][1]}}
+    loc_dict = []
+    organization, place_id, location = p.get_nearby_worship()
+    print(organization)
+    for i in range(min(3,len(organization))):
+        loc_dict.append({})
+        loc_dict[i]['organization'] = organization[i]
+        loc_dict[i]['lat'] = location[i][0]
+        loc_dict[i]['long'] = location[i][1]
     return jsonify(loc_dict)
 
 
@@ -169,11 +178,11 @@ def caller(image):
 
 
 @app.route('/organizations', methods=['GET'])
-def get_organization():
+def get_organizations():
     p = Places()
     loc_dict = {}
     organization, place_id, location = p.get_nearby_worship()
-    print("organization, place_id, location:", organization, place_id, location)
+    # print("organization, place_id, location:", organization, place_id, location)
     for i in range(len(organization)):
         loc_dict[organization[i]] = {  # 'place_id': place_id[i],
             'location': {'lat': location[i][0], 'long': location[i][1]}}
@@ -188,7 +197,7 @@ def send_recipe(ingredients):
 
 def run_scheduled_task(ingredients, FOOD_PR):
     ingr = ''
-    print("Ingr: ", ingredients)
+    # print("Ingr: ", ingredients)
     for item in ingredients:
         ingr += item + ","
     timer = Timer(2, send_notification, [ingr], {'f': FOOD_PR})
@@ -196,28 +205,43 @@ def run_scheduled_task(ingredients, FOOD_PR):
 
 
 def send_notification(*farg, **kwargs):
-    print(farg)
+    # print(farg)
     ingredients = farg[0]
     food = kwargs['f']
 
     recipes = send_recipe(ingredients)
+    print("8******************************\nrecipes:", recipes)
     push_service = FCMNotification(
-        api_key="AAAAkn0q-qU:APA91bG4dp-bdQfYD3zSJwZnFYiWXnYMLI6BtNDl-yJSQW2hnSW1dwH_Yw1qTayryoDXPVZeOsUw9ZoQKXRDiHINnIw4u4oSchiaE3wPWFIVqcAkMpkfPH5eneZZRjKdnltTcn1PUafu")
+        api_key="AAAAeyivA7M:APA91bHUVruxK72d9e-TQ_tWEj7MRUfYrLUjlAydZz0hwTT8yJ6xLVy4KEFhRdeLrqlkwP97u99raBXIps5UxMcDwxlRcVTxziT0PTFI8ExzR1SEa6clMKkFuT2X56nd4kY7or7J5hkM")
 
     # Your api-key can be gotten from:  https://console.firebase.google.com/project/<project-name>/settings/cloudmessaging
     notify_about = {}
-    notify_about['expires'] = {}
+    notify_about['expires'] = []
     index = 0
-    for food in food:
-        if food['days'] <= 3:
-            notify_about['expires'].append(food['product'])
-    notify_about['recipes'] = recipes
-    message_title = "Food Expiration Alert"
-    message_body = notify_about
-    # result = push_service.notify_single_device(registration_id=REGISTERED_DEVICE_ID, message_title=message_title,
-    # message_body=json.dumps(message_body), )
 
-    print(notify_about)
+    # for food in food:
+    #     if food['days'] <= 3:
+    #         notify_about['expires'].append(food['product'])
+    # notify_about['recipes'] = recipes
+    # message_body = notify_about
+
+    message_title = "Food Expiration Alert"
+
+    message_body = "Hi, we noticed that " + ", ".join(list(map(lambda x: x["product"], food))[
+                                                      :3]) + " are expiring and you should consume them by Thursday. Alternatively, you could use them to make " + ", ".join(
+        list(map(lambda x: x["recipe"], recipes))[:3])
+    print("message_body: ", message_body)
+    # message_body = "notify_about"
+    # global REGISTERED_DEVICE_ID
+    #     # print("REGISTERED_DEVICE_ID: ", REGISTERED_DEVICE_ID)
+
+    result = push_service.notify_single_device(
+        registration_id="fivC8EoC9w4:APA91bFA7ms8lrPsWpW5OXLtLIfGcMNmUcM7MM2pb4j7iZhN8m5ZSBbImnnkUjlW5yON3UHaXgLcMiX1N3lmapsPWhyDPDQcKOwcJsH-PzMI91tMgY7j72P14ZmLny0Ze9_oihAPqtir",
+        data_message={"url": "http://google.com"},
+        message_title=message_title,
+        message_body=json.dumps(message_body))
+    # print(result)
+    # print(notify_about)
 
 
 def get_fact():

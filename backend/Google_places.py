@@ -19,6 +19,7 @@ class Places:
         #self.possible_type=['church','hindu_temple','synagogue','mosque']
         self.place_ids=[]
         self.location=[]
+
     def get_nearby_worship(self):
         organizations=[]
         for type in self.possible_type:
