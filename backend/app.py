@@ -11,7 +11,7 @@ app = Flask(__name__)
 SECRET = 'mysecret'
 UPLOAD_FOLDER = './data/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
-REGISTERED_DEVICE_ID=None
+REGISTERED_DEVICE_ID = None
 
 '''
 def _get_access_token():
@@ -30,6 +30,7 @@ def get_access_token():
     return jsonify({"token": _get_access_token()}), 200
 '''
 
+
 @app.route("/ping")
 def ping():
     return "pong"
@@ -42,7 +43,7 @@ def login():
         print("request: ", req_object)
         encoded = jwt.encode(req_object, SECRET, algorithm='HS256')
         print("encoded: ", encoded)
-        return jsonify({"token": str(encoded,'utf-8')}), 200
+        return jsonify({"token": str(encoded, 'utf-8')}), 200
     else:
         return jsonify({"status": "Failed",
                         "reason": "Not a json"}), 400
@@ -51,18 +52,21 @@ def login():
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/permission',methods=['POST'])
+
+@app.route('/permission', methods=['POST'])
 def firebase_auth():
     if request.is_json:
         req_object = request.get_json()
-        REGISTERED_DEVICE_ID=req_object["regiatration_id"]
+        REGISTERED_DEVICE_ID = req_object["regiatration_id"]
         return jsonify({"api_key"})
 
-@app.route('/test',methods=['GET'])
+
+@app.route('/test', methods=['GET'])
 def send_notification():
     from pyfcm import FCMNotification
 
-    push_service = FCMNotification(api_key="AAAAkn0q-qU:APA91bG4dp-bdQfYD3zSJwZnFYiWXnYMLI6BtNDl-yJSQW2hnSW1dwH_Yw1qTayryoDXPVZeOsUw9ZoQKXRDiHINnIw4u4oSchiaE3wPWFIVqcAkMpkfPH5eneZZRjKdnltTcn1PUafu")
+    push_service = FCMNotification(
+        api_key="AAAAkn0q-qU:APA91bG4dp-bdQfYD3zSJwZnFYiWXnYMLI6BtNDl-yJSQW2hnSW1dwH_Yw1qTayryoDXPVZeOsUw9ZoQKXRDiHINnIw4u4oSchiaE3wPWFIVqcAkMpkfPH5eneZZRjKdnltTcn1PUafu")
 
     # OR initialize with proxies
     '''
@@ -78,9 +82,10 @@ def send_notification():
     message_title = "Uber update"
     message_body = "Hi john, your customized news for today is ready"
     result = push_service.notify_single_device(registration_id="asbdaf", message_title=message_title,
-                                               message_body=message_body,)
+                                               message_body=message_body, )
 
     print(result)
+
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -88,7 +93,7 @@ def upload_file():
     print('request', request.files)
     if 'bill' not in request.files:
         return jsonify({"status": "Failed",
-                        "reason": "bill is not in request.files" }), 400
+                        "reason": "bill is not in request.files"}), 400
     file = request.files['bill']
     # if user does not select file, browser also
     # submit a empty part without filename
@@ -103,7 +108,7 @@ def upload_file():
         # return redirect(url_for('uploaded_file',
         #                         filename=filename))
 
-        a,b = caller(file)
+        a, b = caller(file)
         return a
     else:
         return jsonify({"status": "Failed",
@@ -111,52 +116,59 @@ def upload_file():
 
 
 def caller(image):
-    ocr_obj=Google()
-    ocr_text=ocr_obj.get_text()
-    fd=Food_Bank()
-    exp=Expiry_date()
-    food_dict={}
-    cost_dict={}
-    food_item=None
+    ocr_obj = Google()
+    ocr_text = ocr_obj.get_text()
+    fd = Food_Bank()
+    exp = Expiry_date()
+    food_dict = {}
+    cost_dict = {}
+    food_item = None
     for line in ocr_text:
-        if "$" in line and food_item!=None:
+        if "$" in line and food_item != None and isinstance(food_item,str):
             p = re.compile(r"\d+\.*\d*")
-            if len(p.findall(line))>0:
+            if len(p.findall(line)) > 0:
                 cost_dict[food_item] = p.findall(line)[0]
             else:
-                cost_dict[food_item]="$1.50"
+                cost_dict[food_item] = "$1.50"
         else:
             food_item = fd.get_food(line)
-            if " " in food_item:
-                food_item=food_item.split(" ")
-                for food in food_item:
-                    food=food.strip(',')
-                    expiry_days = exp.get_expiry_date(food)
+            if food_item:
+                if " " in food_item:
+                    food_item = food_item.split(" ")
+                    for food in food_item:
+                        food = food.strip(',')
+                        expiry_days = exp.get_expiry_date(food)
+                        if expiry_days:
+                            food_dict[food] = expiry_days
+                            food_item = food
+                            break
+                else:
+                    expiry_days = exp.get_expiry_date(food_item)
                     if expiry_days:
-                        food_dict[food_item]=expiry_days
-                        break
-            else:
-                expiry_days = exp.get_expiry_date(food_item)
-                if expiry_days:
-                    food_dict[food_item] = expiry_days
+                        food_dict[food_item] = expiry_days
 
     return json.dumps(food_dict), json.dumps(cost_dict)
 
+
 def get_organiztion():
-    p=places()
-    loc_dict={}
-    organization,place_id,location=p.get_nearby_charities()
+    p = places()
+    loc_dict = {}
+    organization, place_id, location = p.get_nearby_charities()
     for i in range(len(organization)):
-        loc_dict[organization[i]]={'place_id':place_id[i],'location':{'lat':location[i]['lat'],'long':location[i]['long']}}
+        loc_dict[organization[i]] = {'place_id': place_id[i],
+                                     'location': {'lat': location[i]['lat'], 'long': location[i]['long']}}
     return jsonify(loc_dict)
 
+
 def send_recipe(ingredients):
-    fd=Food_Bank()
+    fd = Food_Bank()
     return fd.get_recipe(ingredients)
+
 
 def run_scheduled_task():
     timer = Timer(10, send_notification)
     timer.start()
+
 
 '''
 def final_json():
@@ -165,4 +177,4 @@ def final_json():
 '''
 
 if __name__ == '__main__':
-   app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0')
