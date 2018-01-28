@@ -1,6 +1,6 @@
 # Make a Difference Verve
 
-This is the backend piece of our submission for the Make a Difference Hackathon at Georgia Tech, Jan 2018
+This is the backend piece of our submission for the [Make a Difference Hackathon](https://cchackathon.github.io/make-a-diff/) at Georgia Tech, Jan 2018
 
 The problem that we try to address through this app is Food Wastage
 
