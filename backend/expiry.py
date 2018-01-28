@@ -30,7 +30,7 @@ class Expiry_date:
         return list(filter(str.isdigit, text))
 
     def get_expiry_date(self,food_item):
-        with open("expiry_json.json",'r') as f:
+        with open("../food_db/expiry_json.json",'r') as f:
             dic=json.load(f)
             if food_item in dic:
                 return dic[food_item]

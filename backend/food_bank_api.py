@@ -16,8 +16,12 @@ class Food_Bank:
         response=requests.get('https://api.edamam.com/api/food-database/parser?ingr=='+url_text+'&app_id='+self.api_id_food+'&app_key='+self.api_key_food+'&page=0')
         food=(response.json())
         pp = pprint.PrettyPrinter(width=10, compact=True)
-        food_items=food['hints'][0]['food']['label']
-        return food_items
+        print("food", food)
+        if (food and food['hints']):
+            food_items=food['hints'][0]['food']['label']
+            return food_items
+        else:
+            return None
 
     def fill_food(self,text):
         url_text=urllib.parse.quote_plus(text)
@@ -48,6 +52,6 @@ class Food_Bank:
             recipes[i]+="\n"+food[i]['recipe']['url']
         return recipes
 
-f=Food_Bank()
-#print(f.get_food('hammer'))
-print(f.get_recipe("chicken,milk"))
+# f=Food_Bank()
+# print(f.get_food('hammer'))
+# print(f.get_recipe("chicken,milk"))

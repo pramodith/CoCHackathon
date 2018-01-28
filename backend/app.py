@@ -1,23 +1,11 @@
-# import os
 from flask import Flask, json, request, redirect, url_for, Response, jsonify
 import jwt
 from backend.food_bank_api import Food_Bank
 from backend.expiry import Expiry_date
 from backend.Google_cloud import Google
-import pyfcm
 import re
 from threading import Timer
 from backend.Google_places import places
-# from werkzeug.utils import secure_filename
-
-#import firebase_admin
-#from firebase_admin import credentials
-
-from oauth2client.service_account import ServiceAccountCredentials
-
-#cred = credentials.Certificate("../auth/Chiroptera-b1c2c21ccfd4.json")
-#firebase_admin.initialize_app(cred)
-
 
 app = Flask(__name__)
 SECRET = 'mysecret'
@@ -114,10 +102,13 @@ def upload_file():
         # file.save(os.path.join(UPLOAD_FOLDER, filename))
         # return redirect(url_for('uploaded_file',
         #                         filename=filename))
-        return jsonify([{"milk": "5d"}, {"bread": "2d"}, {"eggs": "7d"}])
+
+        a,b = caller(file)
+        return a
     else:
         return jsonify({"status": "Failed",
                         "reason": "File name not valid"}), 400
+
 
 def caller(image):
     ocr_obj=Google()
@@ -144,7 +135,7 @@ def caller(image):
                     food_dict[food_item]=expiry_days
                     break
 
-    return json.dumps(food_dict),json.dumps(cost_dict)
+    return json.dumps(food_dict), json.dumps(cost_dict)
 
 def get_organiztion():
     p=places()
