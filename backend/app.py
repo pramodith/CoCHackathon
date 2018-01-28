@@ -1,7 +1,6 @@
 # import os
 from flask import Flask, json, request, redirect, url_for, Response, jsonify
 import jwt
-from backend.ocr import OCR
 from backend.food_bank_api import Food_Bank
 from backend.expiry import Expiry_date
 from backend.Google_cloud import Google
@@ -137,9 +136,14 @@ def caller(image):
                 cost_dict[food_item]="$1.50"
         else:
             food_item = fd.get_food(line)
-            expiry_days = exp.get_expiry_date(food_item)
-            if expiry_days:
-                food_dict[food_item]=expiry_days
+            food_item=food_item.split(" ")
+            for food in food_item:
+                food=food.strip(',')
+                expiry_days = exp.get_expiry_date(food)
+                if expiry_days:
+                    food_dict[food_item]=expiry_days
+                    break
+
     return json.dumps(food_dict),json.dumps(cost_dict)
 
 def get_organiztion():
