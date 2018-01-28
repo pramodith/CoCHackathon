@@ -5,24 +5,28 @@ from backend.ocr import OCR
 from backend.food_bank_api import Food_Bank
 from backend.expiry import Expiry_date
 from backend.Google_cloud import Google
+import pyfcm
 import re
+from threading import Timer
+from backend.Google_places import places
 # from werkzeug.utils import secure_filename
 
-import firebase_admin
-from firebase_admin import credentials
+#import firebase_admin
+#from firebase_admin import credentials
 
 from oauth2client.service_account import ServiceAccountCredentials
 
-cred = credentials.Certificate("../auth/Chiroptera-b1c2c21ccfd4.json")
-firebase_admin.initialize_app(cred)
+#cred = credentials.Certificate("../auth/Chiroptera-b1c2c21ccfd4.json")
+#firebase_admin.initialize_app(cred)
 
 
 app = Flask(__name__)
 SECRET = 'mysecret'
 UPLOAD_FOLDER = './data/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+REGISTERED_DEVICE_ID=None
 
-
+'''
 def _get_access_token():
     """
     Retrieve a valid access token that can be used to authorize requests.
@@ -31,12 +35,13 @@ def _get_access_token():
     credentials = ServiceAccountCredentials.from_json_keyfile_name("../auth/Chiroptera-b1c2c21ccfd4.json", "https://www.googleapis.com/auth/firebase.messaging")
     access_token_info = credentials.get_access_token()
     return access_token_info.access_token
+'''
 
-
+'''
 @app.route("/gctoken")
 def get_access_token():
     return jsonify({"token": _get_access_token()}), 200
-
+'''
 
 @app.route("/ping")
 def ping():
@@ -59,6 +64,12 @@ def login():
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@app.route('/permission',methods=['POST'])
+def firebase_auth():
+    if request.is_json:
+        req_object = request.get_json()
+        REGISTERED_DEVICE_ID=req_object["regiatration_id"]
+        return jsonify({"api_key"})
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -107,7 +118,44 @@ def caller(image):
                 food_dict[food_item]=expiry_days
     return json.dumps(food_dict),json.dumps(cost_dict)
 
+def get_organiztion():
+    p=places()
+    loc_dict={}
+    organization,place_id,location=p.get_nearby_charities()
+    for i in range(len(organization)):
+        loc_dict[organization[i]]={'place_id':place_id[i],'location':{'lat':location[i]['lat'],'long':location[i]['long']}}
+    return jsonify(loc_dict)
+
 def send_recipe(ingredients):
     fd=Food_Bank()
     return fd.get_recipe(ingredients)
 
+def run_scheduled_task():
+    timer = Timer(10, send_notification)
+    timer.start()
+
+def send_notification():
+    from pyfcm import FCMNotification
+
+    push_service = FCMNotification(api_key="AIzaSyBUQheVYZa02EFcLRg-Sli3GYHBz2M0NAc")
+
+    # OR initialize with proxies
+    '''
+    proxy_dict = {
+        "http": "http://127.0.0.1",
+        "https": "http://127.0.0.1",
+    }
+    push_service = FCMNotification(api_key="<api-key>", proxy_dict=proxy_dict)
+    '''
+    # Your api-key can be gotten from:  https://console.firebase.google.com/project/<project-name>/settings/cloudmessaging
+
+    registration_id = "<device registration_id>"
+    message_title = "Uber update"
+    message_body = "Hi john, your customized news for today is ready"
+    result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title,
+                                               message_body=message_body,)
+
+    print(result)
+
+if __name__ == '__main__':
+   app.run()
