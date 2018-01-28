@@ -3,7 +3,7 @@ import urllib
 import json
 
 
-class places:
+class Places:
 
     def __init__(self,home_lat=33.775618,home_long=-84.396285):
         self.lat=home_lat
@@ -41,9 +41,10 @@ class places:
         for result in places['results']:
             organizations.append(result['name']+": "+result['formatted_address'])
 
+
     def get_directions(self,destination_place_id):
         response = requests.get(self.url_directions + str(self.lat) + "," + str(self.long) + "&destination=place_id:" + str(
             destination_place_id) + "&waypoints=" )
-obj=places()
+obj=Places()
 obj.get_nearby_worship()
 #obj.get_nearby_charities()
