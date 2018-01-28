@@ -1,6 +1,10 @@
 # import os
 from flask import Flask, json, request, redirect, url_for, Response, jsonify
 import jwt
+from backend.ocr import OCR
+from backend.food_bank_api import Food_Bank
+from backend.expiry import Expiry_date
+
 # from werkzeug.utils import secure_filename
 
 
@@ -56,3 +60,22 @@ def upload_file():
     else:
         return jsonify({"status": "Failed",
                         "reason": "File name not valid"}), 400
+
+def caller(image):
+    ocr_obj=OCR(image)
+    ocr_text=ocr_obj.text()
+    ocr_text=ocr_text.split("\n")
+    fd=Food_Bank()
+    exp=Expiry_date()
+    food_dict={}
+    for line in ocr_text:
+        food_item=fd.get_food(line)
+        expiry_days=exp.get_expiry_date(food_item)
+        if expiry_days:
+            food_dict[food_item]=expiry_days
+    return jsonify(food_dict)
+
+def send_recipe(ingredients):
+    fd=Food_Bank()
+    return fd.get_recipe(ingredients)
+
