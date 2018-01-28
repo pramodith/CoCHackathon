@@ -8,11 +8,35 @@ from backend.Google_cloud import Google
 import re
 # from werkzeug.utils import secure_filename
 
+import firebase_admin
+from firebase_admin import credentials
+
+from oauth2client.service_account import ServiceAccountCredentials
+
+cred = credentials.Certificate("../auth/Chiroptera-b1c2c21ccfd4.json")
+firebase_admin.initialize_app(cred)
+
 
 app = Flask(__name__)
 SECRET = 'mysecret'
 UPLOAD_FOLDER = './data/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+
+
+def _get_access_token():
+    """
+    Retrieve a valid access token that can be used to authorize requests.
+    :return: Access token.
+    """
+    credentials = ServiceAccountCredentials.from_json_keyfile_name("../auth/Chiroptera-b1c2c21ccfd4.json", "https://www.googleapis.com/auth/firebase.messaging")
+    access_token_info = credentials.get_access_token()
+    return access_token_info.access_token
+
+
+@app.route("/gctoken")
+def get_access_token():
+    return jsonify({"token": _get_access_token()}), 200
+
 
 @app.route("/ping")
 def ping():
@@ -33,8 +57,7 @@ def login():
 
 
 def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route('/upload', methods=['POST'])
