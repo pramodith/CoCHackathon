@@ -2,6 +2,7 @@ import requests
 import urllib.parse
 import json
 import pprint
+
 class Food_Bank:
 
     def __init__(self):
@@ -24,14 +25,23 @@ class Food_Bank:
         suggested=response.json()
         print(suggested)
 
-    def get_recipe(self,food_items):
+    def get_recipe(self,food_items,preferences=None):
         recipes=[]
+        max_ingredients=None
         url_text = urllib.parse.quote_plus(food_items)
-        response = requests.get('https://api.edamam.com/search?q='+url_text+'&app_id='+self.api_id_recipe+'&app_key='+self.api_key_recipe+'&from=0&to=3')
+        url='https://api.edamam.com/search?q='+url_text+'&app_id='+self.api_id_recipe+'&app_key='+self.api_key_recipe+'&from=0&to=3'
+        if preferences:
+            if "max_ingredients" in preferences:
+                max_ingredients = preferences['max_ingredients']
+                url+='&ingr='+max_ingredients
+            if "calories" in preferences:
+                max_calories = preferences['calories']
+                url+='&calories='+urllib.parse.quote_plus('lte ')+max_calories
+        response=requests.get(url)
         food = (response.json())
         food=food['hits']
         print(food[1])
-        for i in range(3):
+        for i in range(min(len(food),3)):
             recipes.append(food[i]['recipe']['label']+": ")
             for ingredient in food[i]['recipe']['ingredients']:
                 recipes[i]+=ingredient['text']+", "
@@ -39,4 +49,5 @@ class Food_Bank:
         return recipes
 
 f=Food_Bank()
+#print(f.get_food('hammer'))
 print(f.get_recipe("chicken,milk"))
