@@ -40,6 +40,8 @@ def ping():
 def login():
     if request.is_json:
         req_object = request.get_json()
+        if "device_id" in req_object:
+            REGISTERED_DEVICE_ID=req_object['device_id']
         print("request: ", req_object)
         encoded = jwt.encode(req_object, SECRET, algorithm='HS256')
         print("encoded: ", encoded)
@@ -146,7 +148,7 @@ def caller(image):
                     expiry_days = exp.get_expiry_date(food_item)
                     if expiry_days:
                         food_dict[food_item] = expiry_days
-
+    run_scheduled_task(food_dict.keys()[:3])
     return json.dumps(food_dict), json.dumps(cost_dict)
 
 
@@ -165,8 +167,11 @@ def send_recipe(ingredients):
     return fd.get_recipe(ingredients)
 
 
-def run_scheduled_task():
-    timer = Timer(10, send_notification)
+def run_scheduled_task(ingredients):
+    ingr=''
+    for item in ingredients:
+        ingr+=item+","
+    timer = Timer(10, send_recipe,ingr)
     timer.start()
 
 
